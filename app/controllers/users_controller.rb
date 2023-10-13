@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    @users = User
     if params[:search_type].present? && params[:search_value].present?
       case params[:search_type]
       when "1"
@@ -13,8 +13,10 @@ class UsersController < ApplicationController
       when "3"
         @users = @users.where(phone: params[:search_value])
       when "4"
-        @users = @users.where(email: params[:search_value])
+        @users = @users.where("email LIKE ?", "%#{params[:search_value]}%")
       end
+    else
+      @users = @users.all
     end
   end
 
